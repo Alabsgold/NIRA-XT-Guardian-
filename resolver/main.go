@@ -101,12 +101,9 @@ func parseQuery(m *dns.Msg, remoteAddr net.Addr) {
 	for _, q := range m.Question {
 		name := strings.ToLower(q.Name)
 		// Remove trailing dot
-		if strings.HasSuffix(name, ".") {
-			name = name[:len(name)-1]
-		}
+		name = strings.TrimSuffix(name, ".")
 
 		clientIP, _, _ := net.SplitHostPort(remoteAddr.String())
-		
 		// Determine Family ID
 		familyID, ok := resolverMapping[clientIP]
 		if !ok {
@@ -184,7 +181,7 @@ func isBlocked(domain string, policy *Policy) bool {
 			return true
 		}
 	}
-	
+
 	// Category check (stub - in real app would check domain categorization service)
 	if policy.BlockAdult && (strings.Contains(domain, "porn") || strings.Contains(domain, "xxx")) {
 		return true
@@ -193,7 +190,7 @@ func isBlocked(domain string, policy *Policy) bool {
 	return false
 }
 
-func resolveExternal(m *dns.Msg, q dns.Question) {
+func resolveExternal(m *dns.Msg, _ dns.Question) {
 	c := new(dns.Client)
 	in, _, err := c.Exchange(m, "8.8.8.8:53") // Forward to Google DNS
 	if err != nil {
