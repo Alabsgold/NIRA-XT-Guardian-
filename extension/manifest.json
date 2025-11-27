@@ -1,0 +1,31 @@
+{
+    "manifest_version": 3,
+    "name": "NIRA-X-Guardian Extension",
+    "version": "1.0",
+    "description": "Parental control extension for NIRA-X-Guardian",
+    "permissions": [
+        "declarativeNetRequest",
+        "declarativeNetRequestWithHostAccess",
+        "storage",
+        "alarms"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "src/background.js"
+    },
+    "action": {
+        "default_popup": "src/popup.html",
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "48": "icons/icon48.png",
+            "128": "icons/icon128.png"
+        }
+    },
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    }
+}
