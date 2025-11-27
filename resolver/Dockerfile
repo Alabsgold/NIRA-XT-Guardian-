@@ -3,8 +3,10 @@ FROM golang:1.21-alpine AS builder
 WORKDIR /app
 
 COPY go.mod ./
-# COPY go.sum ./
-# RUN go mod download
+# Ensure go.sum exists and deps are downloaded
+RUN apk add --no-cache git
+RUN go mod tidy
+RUN go mod download
 
 COPY . .
 RUN go build -o resolver main.go
