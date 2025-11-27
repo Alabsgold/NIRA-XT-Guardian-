@@ -9,7 +9,8 @@ RUN go mod tidy
 RUN go mod download
 
 COPY . .
-RUN go build -o resolver main.go
+ENV CGO_ENABLED=0
+RUN go build -v -o resolver main.go
 
 FROM alpine:latest
 
