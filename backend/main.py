@@ -13,7 +13,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="NIRA-X-Guardian API")
 
 # CORS
-origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:5354").split(",")
+origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:5354,http://localhost:5173").split(",")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -21,6 +21,25 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.on_event("startup")
+def startup_event():
+    db = next(get_db())
+    try:
+        demo_email = "user@db"
+        demo_password = "password"
+        user = db.query(models.User).filter(models.User.email == demo_email).first()
+        if not user:
+            from app.api.auth import get_password_hash
+            hashed_password = get_password_hash(demo_password)
+            new_user = models.User(email=demo_email, hashed_password=hashed_password)
+            db.add(new_user)
+            db.commit()
+            print(f"Created demo user: {demo_email}")
+    except Exception as e:
+        print(f"Error seeding demo user: {e}")
+    finally:
+        db.close()
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(policy.router, prefix="/api/policy", tags=["policy"])

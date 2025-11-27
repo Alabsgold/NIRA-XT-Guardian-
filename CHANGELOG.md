@@ -12,3 +12,7 @@ All notable changes to this project will be documented in this file.
 - **Docs**: Router setup guide, Privacy Policy (NDPA/NDPR), and API Reference.
 - **Infrastructure**: Docker Compose setup for local development.
 - **CI/CD**: GitHub Actions workflow for build and test.
+
+### Fixed
+- **Resolver**: Fixed Docker build by disabling CGO and installing git.
+- **Backend**: Added demo user seeding (`user@db`) and fixed CORS for local development.
